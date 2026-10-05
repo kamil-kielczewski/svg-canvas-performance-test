@@ -1,3 +1,5 @@
+RUN HERE: https://kamil-kielczewski.github.io/svg-canvas-performance-test/
+
 # Canvas 2D vs SVG — 2D rendering benchmark
 
 Jedna aplikacja, jeden model sceny, jeden generator, jeden cache geometrii,
@@ -24,9 +26,9 @@ Aplikacja działa z `file://` — wszystkie skrypty są klasycznymi `<script>`
 (nie ES-modules), a ikona SVG jest wbudowana jako string, więc nie jest
 potrzebny żaden `fetch()`.
 
-* `index.html` — strona startowa
-* `canvas.html` — backend Canvas 2D
-* `svg.html` — backend SVG DOM
+- `index.html` — strona startowa
+- `canvas.html` — backend Canvas 2D
+- `svg.html` — backend SVG DOM
 
 ### Liczba poziomów hierarchii
 
@@ -50,7 +52,7 @@ Zoom sięga do 1e9×, żeby najgłębsze poziomy (ułamki jednostki sceny) dało
 w ogóle obejrzeć.
 
 Przycisk **„open same config in …”** otwiera drugi backend **w nowej karcie**
-(`target="_blank"`) z *dokładnie tą samą konfiguracją* **oraz aktualnym widokiem**
+(`target="_blank"`) z _dokładnie tą samą konfiguracją_ **oraz aktualnym widokiem**
 (zoom i przesunięcie), więc obie technologie można porównywać obok siebie. W `location.hash`
 zapisywane są wszystkie pola konfiguracji plus `_cx/_cy/_s` — punkt sceny
 w środku ekranu i skala — dzięki czemu widok zgadza się nawet przy innym
@@ -58,16 +60,16 @@ rozmiarze okna.
 
 ## Sterowanie
 
-| akcja | efekt |
-|---|---|
-| drag na **pojedynczym odcinku ściany** | **deformuje pomieszczenie** — przesuwa dwa wierzchołki polilinii; sąsiednie odcinki zostają połączone, a **zawartość pomieszczenia się nie rusza** |
-| drag na **ikonie** | przesuwa ikonę |
-| cokolwiek innego | nic — całych pomieszczeń celowo nie da się przeciągać |
-| drag gdziekolwiek indziej (także po wnętrzu pomieszczenia) | panowanie widoku |
-| shift-drag / środkowy przycisk | panowanie (zawsze) |
-| kółko myszy | zoom względem kursora |
-| prawy przycisk | **własne menu przeglądarki** — nie jest blokowane |
-| `f` / `r` | fit do sceny / pojedynczy render |
+| akcja                                                      | efekt                                                                                                                                              |
+| ---------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| drag na **pojedynczym odcinku ściany**                     | **deformuje pomieszczenie** — przesuwa dwa wierzchołki polilinii; sąsiednie odcinki zostają połączone, a **zawartość pomieszczenia się nie rusza** |
+| drag na **ikonie**                                         | przesuwa ikonę                                                                                                                                     |
+| cokolwiek innego                                           | nic — całych pomieszczeń celowo nie da się przeciągać                                                                                              |
+| drag gdziekolwiek indziej (także po wnętrzu pomieszczenia) | panowanie widoku                                                                                                                                   |
+| shift-drag / środkowy przycisk                             | panowanie (zawsze)                                                                                                                                 |
+| kółko myszy                                                | zoom względem kursora                                                                                                                              |
+| prawy przycisk                                             | **własne menu przeglądarki** — nie jest blokowane                                                                                                  |
+| `f` / `r`                                                  | fit do sceny / pojedynczy render                                                                                                                   |
 
 Przeciągalne są **wyłącznie ikony i pojedyncze odcinki ścian**. Wnętrza
 pomieszczeń nie są uchwytami, dzięki czemu panowanie działa w każdym miejscu
@@ -119,11 +121,11 @@ trybu „bez kolorowania" nie da się rozjechać z trybem paletowym.
 Przełącznik **`Transparent colours`** (sekcja Scene, domyślnie **włączony**)
 decyduje, jak kolor bazowy rozwija się na trzy części pomieszczenia:
 
-| element | `Transparent colours` **ON** | **OFF** |
-|---|---|---|
-| obwódka ściany | kolor bazowy, alpha `1.0` | ciemny odcień HSL, nieprzezroczysty |
-| wnętrze ściany | kolor bazowy, alpha `0.8` | jasny odcień HSL, nieprzezroczysty |
-| wnętrze pomieszczenia | kolor bazowy, alpha `0.2` | najjaśniejszy odcień HSL, nieprzezroczysty |
+| element               | `Transparent colours` **ON** | **OFF**                                    |
+| --------------------- | ---------------------------- | ------------------------------------------ |
+| obwódka ściany        | kolor bazowy, alpha `1.0`    | ciemny odcień HSL, nieprzezroczysty        |
+| wnętrze ściany        | kolor bazowy, alpha `0.8`    | jasny odcień HSL, nieprzezroczysty         |
+| wnętrze pomieszczenia | kolor bazowy, alpha `0.2`    | najjaśniejszy odcień HSL, nieprzezroczysty |
 
 Tryb `OFF` odtwarza pierwotny wygląd **co do piksela**. Obie palety są budowane
 raz przy ładowaniu, a przełącznik jest czystą zmianą stylu — **nie dotyka
@@ -152,15 +154,15 @@ zmiana konfiguracji
 ```
 
 Przeciąganie elementu **nie uruchamia [1] ani [2]** (poza jednym wyjątkiem:
-przesunięcie odcinka ściany przelicza geometrię *tylko tego jednego
-pomieszczenia* — 5 wielokątów ścian + 1 wielokąt wnętrza).
+przesunięcie odcinka ściany przelicza geometrię _tylko tego jednego
+pomieszczenia_ — 5 wielokątów ścian + 1 wielokąt wnętrza).
 
 ## Co jest mierzone
 
-| metryka | zakres pomiaru |
-|---|---|
-| `Last render` / `Average render` | wyłącznie `renderer.renderFrame()` |
-| `Benchmark` (N iteracji) | wyłącznie `renderer.renderScene()` (pełny render) |
+| metryka                          | zakres pomiaru                                    |
+| -------------------------------- | ------------------------------------------------- |
+| `Last render` / `Average render` | wyłącznie `renderer.renderFrame()`                |
+| `Benchmark` (N iteracji)         | wyłącznie `renderer.renderScene()` (pełny render) |
 
 Benchmark **przełącza tło naprzemiennie biały ↔ czarny** na każdym cyklu
 (`beforeEach`, poza mierzonym regionem). Samej pary „wyczyść → narysuj" nie da
