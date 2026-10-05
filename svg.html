@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SVG DOM — 2D render benchmark</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body class="app">
+
+<aside id="sidebar">
+  <header>
+    <h1>2D render benchmark — <span id="renderer-name">SVG DOM</span></h1>
+    <p class="sub">Shared scene model &amp; geometry cache, two render backends.</p>
+    <div class="links">
+      <a id="link-other" target="_blank" rel="noopener" href="canvas.html">↔ open same config in Canvas</a>
+      <a href="index.html">index</a>
+    </div>
+  </header>
+
+  <div id="stats">
+    <div class="stat-grid">
+      <div class="stat-head">Render (single frame)</div>
+      <span class="k">Last render</span><b class="v" id="stat-last">–</b>
+      <span class="k">Average render</span><b class="v" id="stat-avg">–</b>
+      <span class="k">Frames measured</span><b class="v" id="stat-frames">0</b>
+
+      <div class="stat-head">FPS (real frames)</div>
+      <span class="k">FPS</span><b class="v" id="stat-fps">0</b>
+      <span class="k">Min FPS (10 s)</span><b class="v" id="stat-minfps">–</b>
+      <span class="k">Max FPS (10 s)</span><b class="v" id="stat-maxfps">–</b>
+
+      <div class="stat-head">Scene (not measured)</div>
+      <span class="k">Levels built</span><b class="v" id="stat-depth">0</b>
+      <span class="k">Rooms</span><b class="v" id="stat-rooms">0</b>
+      <span class="k">Wall segments</span><b class="v" id="stat-walls">0</b>
+      <span class="k">Icons</span><b class="v" id="stat-icons">0</b>
+      <span class="k">Primitives / render</span><b class="v" id="stat-prims">0</b>
+      <span class="k">Scene generation</span><b class="v" id="stat-gen">–</b>
+      <span class="k">Geometry preparation</span><b class="v" id="stat-geom">–</b>
+
+      <div class="stat-head">Selection</div>
+      <span class="k" style="grid-column:1/-1" id="selinfo">nothing selected</span>
+    </div>
+  </div>
+
+  <div id="panel"><!-- generated from SQAR.ConfigSchema --></div>
+
+  <div id="bench">
+    <div class="buttons">
+      <button id="btn-bench" class="primary">Benchmark</button>
+      <button id="btn-clear">Clear</button>
+      <button id="btn-render">Render once</button>
+      <button id="btn-fit">Fit</button>
+    </div>
+    <pre id="bench-out">ready</pre>
+  </div>
+</aside>
+
+<main id="viewport">
+  <div id="hud">drag a <b>wall segment</b>: deform the room &nbsp;·&nbsp; drag an <b>icon</b>: move it &nbsp;·&nbsp; nothing else moves<br>
+    drag anywhere else (or shift-drag): pan &nbsp;·&nbsp; wheel: zoom at cursor &nbsp;·&nbsp; f: fit &nbsp;·&nbsp; right click: browser menu</div>
+</main>
+
+<!-- ------------------------------ shared layer ------------------------- -->
+<script src="js/shared/geometry.js"></script>
+<script src="js/shared/colors.js"></script>
+<script src="js/shared/icon-asset.js"></script>
+<script src="js/shared/model.js"></script>
+<script src="js/shared/scene-generator.js"></script>
+<script src="js/shared/geometry-builder.js"></script>
+<script src="js/shared/configuration.js"></script>
+<script src="js/shared/benchmark.js"></script>
+<script src="js/shared/renderer.js"></script>
+<script src="js/shared/interaction-controller.js"></script>
+<script src="js/shared/ui.js"></script>
+<script src="js/shared/app.js"></script>
+<!-- -------------------------- SVG specific layer ------------------------ -->
+<script src="js/svg/svg-renderer.js"></script>
+<script src="js/svg/svg-interaction.js"></script>
+<script>
+  // The only svg-aware line in the whole application shell.
+  SQAR.App.start({
+    kind: 'svg',
+    createRenderer: (container) => new SQAR.SvgRenderer(container),
+    createInteraction: (renderer) => new SQAR.SvgInteraction(renderer)
+  });
+</script>
+</body>
+</html>

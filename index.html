@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canvas 2D vs SVG — 2D rendering benchmark</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="landing">
+  <h1>Canvas 2D vs SVG DOM — 2D rendering benchmark</h1>
+  <p>
+    One scene model, one scene generator, one geometry cache, one configuration,
+    one benchmark — and two interchangeable rendering backends. Open both pages,
+    use the <em>“open same config in …”</em> link to carry the exact settings
+    across, and compare.
+  </p>
+
+  <div class="cards">
+    <a class="card" href="canvas.html">
+      <h2>Canvas 2D →</h2>
+      <p>Immediate mode. Every frame re-issues all draw calls on a single
+         <code>&lt;canvas&gt;</code>.</p>
+    </a>
+    <a class="card" href="svg.html">
+      <h2>SVG DOM →</h2>
+      <p>Retained mode. The scene is a real SVG element tree; a render creates
+         or updates DOM nodes.</p>
+    </a>
+  </div>
+
+  <h2>What the scene is</h2>
+  <ul>
+    <li>A room = a rectangle with one door opening, encoded as an open polyline
+        of <strong>6 points / 5 wall segments</strong>.</li>
+    <li>Every room contains 4 identical child rooms in a 2×2 grid, recursively,
+        for a configurable number of levels.</li>
+    <li>Configurable margin between siblings and between children and the parent
+        walls.</li>
+    <li>Leaf rooms (no children) carry an SVG icon.</li>
+    <li>Colours come cyclically from a 16 colour palette. The Scene panel's
+        <em>Transparent colours</em> switch decides how a palette colour expands:
+        on — one colour at alpha <code>1.0</code> / <code>0.8</code> /
+        <code>0.2</code> for outline, wall body and room interior; off — three
+        distinct opaque HSL shades.</li>
+    <li>Room count = (4<sup>levels</sup> − 1) / 3 — e.g. 5 levels = 341 rooms /
+        1 705 wall segments / 256 icons, 7 levels = 5 461 rooms / 27 305 walls.</li>
+    <li>The level count starts at <code>1</code> and is stepped up one at a time
+        with <code>◀ ▶</code>; there is no upper limit, and every extra level
+        really does draw another, smaller generation of rooms. Wall thickness is
+        clamped to 25 % of its own room, so no depth is ever geometrically
+        impossible.</li>
+    <li>The only ceiling is the explicit <em>Room budget</em> in the Scene panel
+        (default 200 000, enough for 9 levels = 87 381 rooms). Raise it to go
+        deeper; the <em>Levels built</em> stat shows what was actually built.</li>
+  </ul>
+
+  <h2>What is measured</h2>
+  <ul>
+    <li><strong>Measured:</strong> only <code>renderer.renderScene()</code> /
+        <code>renderer.renderFrame()</code> — Canvas draw calls, or SVG DOM
+        creation/attribute updates.</li>
+    <li><strong>Not measured:</strong> scene generation, geometry preparation,
+        colour derivation, icon parsing, UI work — all of it runs once per
+        configuration change, outside every timer.</li>
+    <li><strong>FPS</strong> comes from frames that were really rendered inside
+        <code>requestAnimationFrame</code>, never from a synthetic timer.</li>
+    <li>The benchmark flips the backdrop black/white on every cycle, so you can
+        see that each iteration really clears and rebuilds the whole scene.</li>
+  </ul>
+
+  <h2>Controls</h2>
+  <ul>
+    <li>Drag a <strong>single wall segment</strong> to deform its room. The two
+        shared vertices move, the neighbouring segments stay attached, and the
+        room's <em>contents</em> (child rooms, icons) do not move with it.</li>
+    <li>Drag an <strong>icon</strong> to move it.</li>
+    <li>Nothing else is draggable — whole rooms deliberately are not, so a drag
+        never carries a whole subtree with it.</li>
+    <li>Drag anywhere else — including the inside of a room — to <strong>pan</strong>.
+        Shift-drag and middle-drag always pan.</li>
+    <li>Wheel to zoom — the point under the cursor stays under the cursor.</li>
+    <li>Right click opens the browser's own context menu; it is never suppressed.</li>
+    <li><code>f</code> fit to scene, <code>r</code> render once.</li>
+  </ul>
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+     stroke="#243447" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+  <!-- Simple "sofa" furniture icon. Replace this file (and the inlined copy in
+       js/shared/icon-asset.js) to change the icon used by both renderers. -->
+  <path d="M4 10.5V7.2A2.2 2.2 0 0 1 6.2 5h11.6A2.2 2.2 0 0 1 20 7.2v3.3"/>
+  <path d="M4 10.5a2.2 2.2 0 0 1 2.2 2.2V15h11.6v-2.3a2.2 2.2 0 0 1 2.2-2.2 2 2 0 0 1 0 4v4.5H4V14.5a2 2 0 0 1 0-4z"/>
+  <path d="M7.6 15v-2.3h8.8V15"/>
+  <path d="M6.5 19.2v1.3M17.5 19.2v1.3"/>
+</svg>
