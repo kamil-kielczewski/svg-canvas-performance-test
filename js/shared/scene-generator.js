@@ -61,16 +61,13 @@
 
   function generate(cfg) {
     const counter = { n: 0 };           // -> cyclic colour index (room N -> N % 16)
-    // Safety net, NOT a geometric limit: without it a few extra clicks on the
-    // levels stepper would ask for millions of rooms and kill the tab.
-    //
-    // It is applied as a WHOLE-LEVEL limit, never as a running node counter:
-    // a depth-first cut-off would leave one branch deep and its siblings empty,
-    // and a lopsided scene is useless as a benchmark. So we keep the deepest
-    // COMPLETE tree that fits the budget. `scene.budgetHit` reports when it bites.
-    const budget = Math.max(1, cfg.maxRooms);
-    let levelLimit = 1;
-    while (levelLimit < cfg.levels && (Math.pow(4, levelLimit + 1) - 1) / 3 <= budget) levelLimit++;
+
+    // NO SAFETY NET, BY DESIGN.
+    // There is no room budget, no node cap, no time limit and no minimum size.
+    // `cfg.levels` is honoured literally: the generator builds the complete
+    // 4-ary tree it was asked for, however large. Room count is (4^L - 1) / 3,
+    // so L = 12 is 5.6 M rooms and the tab WILL die. That is the intended
+    // behaviour -- the tool exists to find where each technology breaks.
 
     function makeRoom(level, w, h, tx, ty, parent) {
       const room = new Room(level, counter.n++, w, h, tx, ty, parent);
@@ -78,7 +75,7 @@
       room.lineWidth = clampToRoom(lineWidthForLevel(cfg, level), w, h);
       buildPolyline(room, cfg.doorPercent);
 
-      const isLastLevel = level + 1 >= levelLimit;
+      const isLastLevel = level + 1 >= cfg.levels;
       if (!isLastLevel) {
         // Inner usable rectangle = room rect inset by half the wall thickness
         // (so children never overlap the wall body) plus the configurable
@@ -92,14 +89,12 @@
         const cw = (iw - gap) / 2;
         const ch = (ih - gap) / 2;
 
-        // The ONLY limits are (a) real degeneracy -- children would have zero
-        // or negative size, which can only happen with extreme margins -- and
-        // (b) the explicit room budget below. There is deliberately NO absolute
-        // minimum size: rooms shrink geometrically, so level N+1 must always be
-        // drawable as long as level N was. `clampToRoom` guarantees the walls
-        // shrink with the room instead of outgrowing it.
-        const tiny = cfg.rootSize * 1e-9;        // float64 sanity floor only
-        if (cw > tiny && ch > tiny) {
+        // The ONLY stop condition is true degeneracy: a child with zero or
+        // negative size, which can only come from extreme margin settings.
+        // There is deliberately NO minimum size -- rooms shrink geometrically,
+        // so level N+1 stays drawable as long as level N was, and `clampToRoom`
+        // keeps the walls shrinking with the room instead of outgrowing it.
+        if (cw > 0 && ch > 0) {
           for (let row = 0; row < 2; row++) {
             for (let col = 0; col < 2; col++) {
               room.children.push(makeRoom(
@@ -123,9 +118,7 @@
     }
 
     const root = makeRoom(0, cfg.rootSize, cfg.rootSize, 0, 0, null);
-    const scene = new SceneModel(root, cfg);
-    scene.budgetHit = levelLimit < cfg.levels;
-    return scene;
+    return new SceneModel(root, cfg);
   }
 
   SQAR.SceneGenerator = { generate, thicknessForLevel, lineWidthForLevel, buildPolyline, clampToRoom };

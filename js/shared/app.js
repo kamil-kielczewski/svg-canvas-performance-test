@@ -211,10 +211,9 @@
     function updateCounts() {
       const capped = scene.depth < config.levels;
       $('stat-depth').textContent = capped ? scene.depth + ' / ' + config.levels : String(scene.depth);
+      // The only thing that can still truncate the tree is degenerate geometry.
       $('stat-depth').title = capped
-        ? (scene.budgetHit
-            ? 'Stopped by the room budget (Scene panel). Raise it to generate deeper levels.'
-            : 'Stopped by the margins: children would have zero size. Lower the margin settings.')
+        ? 'Stopped by the margins: children would have zero or negative size. Lower the margin settings.'
         : '';
       $('stat-depth').classList.toggle('capped', capped);
       $('stat-rooms').textContent = String(scene.roomCount);
@@ -253,7 +252,7 @@
     }
 
     /* ---------------- config panel ------------------------------------ */
-    SQAR.UI.buildPanel($('panel'), config, kind, function (field) {
+    SQAR.UI.buildPanel({ default: $('panel'), bench: $('bench-config') }, config, kind, function (field) {
       scheduleRegenerate(field.rebuild);
     });
     syncHash();

@@ -18,6 +18,20 @@
     </div>
   </header>
 
+  <!-- Benchmark sits ABOVE the render stats: it is what the page is for. -->
+  <div id="bench">
+    <div id="bench-config"><!-- the schema's Benchmark section lands here --></div>
+    <div class="bench-actions">
+      <div class="buttons">
+        <button id="btn-bench" class="primary">Benchmark</button>
+        <button id="btn-clear">Clear</button>
+        <button id="btn-render">Render once</button>
+        <button id="btn-fit">Fit</button>
+      </div>
+      <pre id="bench-out">ready</pre>
+    </div>
+  </div>
+
   <div id="stats">
     <div class="stat-grid">
       <div class="stat-head">Render (single frame)</div>
@@ -46,15 +60,6 @@
 
   <div id="panel"><!-- generated from SQAR.ConfigSchema --></div>
 
-  <div id="bench">
-    <div class="buttons">
-      <button id="btn-bench" class="primary">Benchmark</button>
-      <button id="btn-clear">Clear</button>
-      <button id="btn-render">Render once</button>
-      <button id="btn-fit">Fit</button>
-    </div>
-    <pre id="bench-out">ready</pre>
-  </div>
 </aside>
 
 <main id="viewport">

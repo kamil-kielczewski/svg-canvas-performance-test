@@ -32,9 +32,11 @@ potrzebny żaden `fetch()`.
 
 ### Liczba poziomów hierarchii
 
-`Hierarchy levels` to **stepper, nie suwak**: startuje od `1` i zwiększa się
-o jeden przyciskiem `▶` (lub strzałką w prawo), **bez górnego ograniczenia**.
-Wartość można też wpisać ręcznie.
+`Hierarchy levels` to **stepper, nie suwak**: domyślnie `6` (1 365 pomieszczeń),
+minimum `1`, **bez górnego ograniczenia** — zmienia się o jeden przyciskiem
+`◀` / `▶` (lub strzałkami w lewo/prawo). Wartość można też wpisać ręcznie.
+Etykieta jest wyróżniona na czerwono, bo to ustawienie najmocniej decyduje
+o wyniku pomiaru.
 
 Każdy kolejny poziom **naprawdę dorysowuje** kolejne, mniejsze pomieszczenia —
 nie ma żadnego minimalnego rozmiaru w jednostkach sceny. Grubość ściany jest
@@ -42,11 +44,26 @@ przycinana do 25 % rozmiaru własnego pomieszczenia (`MAX_THICKNESS_RATIO`),
 więc `minThickness` ani tryb `constant` nie są w stanie sprawić, że ściany
 przerosną pomieszczenie i zatrzymają rekurencję.
 
-Liczba pomieszczeń rośnie jak `(4^levels − 1) / 3`, więc jedynym realnym
-ograniczeniem jest **`Room budget`** w panelu Scene (domyślnie 200 000 — starcza
-na 9 poziomów = 87 381 pomieszczeń). Statystyka **`Levels built`** pokazuje, ile
-poziomów faktycznie powstało (np. `9 / 12` na czerwono, z tooltipem mówiącym,
-czy zabrakło budżetu, czy miejsca przy skrajnych marginesach).
+### Brak jakichkolwiek limitów — celowo
+
+Generator **nie ma** budżetu pomieszczeń, limitu węzłów, timeoutu ani progu
+pamięci. `Hierarchy levels` jest honorowane dosłownie:
+
+| poziomy | pomieszczenia | odcinki ścian |
+|---:|---:|---:|
+| 6 | 1 365 | 6 825 |
+| 8 | 21 845 | 109 225 |
+| 10 | 349 525 | 1 747 625 |
+| 12 | 5 592 405 | 27 962 025 |
+
+Przy ~350 tys. pomieszczeń model zajmuje rzędu 2 GB sterty, więc **poziom 11+
+zawiesi lub ubije kartę** — i tak ma być. Narzędzie służy do znalezienia
+granicy obu technologii, a nie do jej ukrywania.
+
+Jedynym warunkiem przerwania rekurencji jest prawdziwa degeneracja (dziecko
+o zerowym lub ujemnym rozmiarze). W zakresach dostępnych w panelu nie da się
+jej wywołać — nawet przy skrajnych marginesach drzewo jest zawsze kompletne.
+Statystyka **`Levels built`** i tak pokazuje, ile poziomów faktycznie powstało.
 
 Zoom sięga do 1e9×, żeby najgłębsze poziomy (ułamki jednostki sceny) dało się
 w ogóle obejrzeć.
@@ -110,6 +127,19 @@ dzieci i ikony mają własne lokalne transformacje, więc zostają na miejscu.
     svg-renderer.js              [3] rendering: tworzenie/aktualizacja DOM
     svg-interaction.js           hit-test natywny (event.target) + fallback
 ```
+
+## Układ panelu bocznego
+
+```
+header            tytuł + link do drugiego backendu
+Benchmark         ustawienia benchmarku + przyciski + wyniki
+Render / FPS / Scene / Selection   statystyki
+Scene / Walls / Rooms / Icons      konfiguracja sceny
+```
+
+Sekcja `Benchmark` jest generowana ze schematu do `#bench-config` (pole
+`container: 'bench'` w `ConfigSchema`), dzięki czemu wszystkie kontrolki
+benchmarku leżą razem **nad** statystykami renderowania.
 
 ## Kolory
 

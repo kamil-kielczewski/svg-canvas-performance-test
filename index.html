@@ -45,14 +45,15 @@
         distinct opaque HSL shades.</li>
     <li>Room count = (4<sup>levels</sup> − 1) / 3 — e.g. 5 levels = 341 rooms /
         1 705 wall segments / 256 icons, 7 levels = 5 461 rooms / 27 305 walls.</li>
-    <li>The level count starts at <code>1</code> and is stepped up one at a time
-        with <code>◀ ▶</code>; there is no upper limit, and every extra level
+    <li>The level count defaults to <code>6</code> (1 365 rooms) and is stepped
+        one at a time with <code>◀ ▶</code>; there is no upper limit, and every extra level
         really does draw another, smaller generation of rooms. Wall thickness is
         clamped to 25 % of its own room, so no depth is ever geometrically
         impossible.</li>
-    <li>The only ceiling is the explicit <em>Room budget</em> in the Scene panel
-        (default 200 000, enough for 9 levels = 87 381 rooms). Raise it to go
-        deeper; the <em>Levels built</em> stat shows what was actually built.</li>
+    <li>There is <strong>no cap of any kind</strong> — no room budget, no node
+        limit, no timeout. 10 levels is 349 525 rooms (~2 GB); 11+ will hang or
+        kill the tab, which is the point: the tool is for finding where each
+        technology breaks.</li>
   </ul>
 
   <h2>What is measured</h2>

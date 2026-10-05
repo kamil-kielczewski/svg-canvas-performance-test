@@ -16,7 +16,13 @@
     return n;
   }
 
-  function buildPanel(container, config, kind, onFieldChange) {
+  /**
+   * @param {object} containers  { default: HTMLElement, [name]: HTMLElement }
+   *        A schema section may declare `container: 'name'` to be rendered
+   *        somewhere else in the sidebar (the Benchmark section goes next to
+   *        the Benchmark buttons, above the render stats).
+   */
+  function buildPanel(containers, config, kind, onFieldChange) {
     const controls = {};
     let section = null;
 
@@ -24,13 +30,14 @@
       if (f.section) {
         section = el('section', 'panel-section');
         section.appendChild(el('h2', null, f.section));
-        container.appendChild(section);
+        (containers[f.container] || containers.default).appendChild(section);
         return;
       }
       if (f.only && f.only !== kind) return;
 
       const row = el('div', 'row');
-      const label = el('label', 'row-label', f.label);
+      // `highlight` marks the one setting that dominates the benchmark result.
+      const label = el('label', 'row-label' + (f.highlight ? ' highlight' : ''), f.label);
       row.appendChild(label);
 
       const value = config.values[f.key];

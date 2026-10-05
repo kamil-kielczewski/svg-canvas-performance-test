@@ -94,6 +94,8 @@ body.app { display: flex; overflow: hidden; }
 }
 .row { display: flex; align-items: center; gap: 8px; margin: 5px 0; }
 .row-label { flex: 1 1 auto; font-size: 12px; }
+/* The one setting that drives the whole measurement -- made to stand out. */
+.row-label.highlight { color: var(--warn); font-weight: 650; }
 .row-bool { justify-content: space-between; }
 .range-wrap { display: flex; align-items: center; gap: 5px; flex: 0 0 150px; }
 .range-wrap input[type=range] { flex: 1 1 auto; width: 70px; }
@@ -118,7 +120,9 @@ input[type=color] { padding: 0; width: 38px; height: 22px; }
 .hint { margin: 2px 0 6px; font-size: 10.5px; color: var(--muted); }
 
 /* -------------------------------------------------------------- benchmark */
-#bench { padding: 10px 14px 20px; }
+#bench { border-bottom: 1px solid var(--line); background: #fafbfd; }
+#bench .panel-section { border-bottom: 0; padding-bottom: 2px; }
+.bench-actions { padding: 4px 14px 14px; }
 #bench .buttons { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
 button {
   font: inherit; font-size: 12px; padding: 5px 11px; cursor: pointer;

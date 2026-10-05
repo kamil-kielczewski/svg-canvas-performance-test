@@ -136,7 +136,7 @@
    * coordinates far below 1 scene unit, and a fixed 2-decimal rounding used to
    * collapse them all to zero -- deep rooms existed in the model but rendered
    * as nothing. Above 1 unit we stay short (4 decimals); below it we keep 7
-   * significant digits, which is ample for any depth the budget allows.
+   * significant digits, which is ample for any depth that fits in memory.
    */
   function fmt(v) {
     if (!isFinite(v)) return 0;

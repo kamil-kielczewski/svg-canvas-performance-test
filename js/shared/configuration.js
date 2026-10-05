@@ -24,16 +24,14 @@
     // Unbounded on purpose: there is no upper limit, the stepper just counts up.
     // SceneGenerator stops recursing on its own once children would be smaller
     // than their own walls, so an absurd value can never recurse forever.
-    { key: 'levels', label: 'Hierarchy levels', type: 'stepper', min: 1, step: 1, def: 1, rebuild: 'scene',
-      hint: 'Rooms = (4^levels − 1) / 3. Use ◀ ▶ (or the arrow keys) to step one level at a time.' },
+    { key: 'levels', label: 'Hierarchy levels', type: 'stepper', min: 1, step: 1, def: 6, rebuild: 'scene', highlight: true,
+      hint: 'Rooms = (4^levels − 1) / 3 — 6:1365, 8:21845, 10:349525, 12:5.6M. There is NO cap: a high value will hang or crash the tab, on purpose.' },
     { key: 'rootSize', label: 'Root room size', type: 'range', min: 200, max: 4000, step: 50, def: 1200, unit: 'u', rebuild: 'scene' },
     { key: 'wallMarginPercent', label: 'Margin: child → parent wall', type: 'range', min: 0, max: 30, step: 0.5, def: 6, unit: '%', rebuild: 'scene' },
     { key: 'childGapPercent', label: 'Margin: between children', type: 'range', min: 0, max: 40, step: 0.5, def: 8, unit: '%', rebuild: 'scene' },
     { key: 'doorPercent', label: 'Door opening width', type: 'range', min: 0, max: 80, step: 1, def: 22, unit: '%', rebuild: 'scene' },
     { key: 'transparentColors', label: 'Transparent colours', type: 'bool', def: true, rebuild: 'style',
       hint: 'On: room, wall body and outline share one colour at alpha 0.2 / 0.8 / 1. Off: three opaque HSL shades.' },
-    { key: 'maxRooms', label: 'Room budget', type: 'number', min: 1, max: 20000000, step: 1000, def: 200000, rebuild: 'scene',
-      hint: 'Safety net only — generation stops once this many rooms exist. Raise it to go deeper (levels L need (4^L−1)/3 rooms).' },
 
     { section: 'Walls' },
     { key: 'wallMode', label: 'Wall mode', type: 'select', def: 'thick', rebuild: 'scene',
@@ -64,7 +62,9 @@
     { key: 'iconSize', label: 'Icon size (fixed)', type: 'range', min: 1, max: 300, step: 1, def: 24, unit: 'u', rebuild: 'geometry' },
     { key: 'iconScalePercent', label: 'Icon size (proportional)', type: 'range', min: 5, max: 95, step: 1, def: 45, unit: '%', rebuild: 'geometry' },
 
-    { section: 'Benchmark' },
+    // Rendered into #bench-config, i.e. above the render stats, next to the
+    // Benchmark buttons -- not into the main #panel.
+    { section: 'Benchmark', container: 'bench' },
     { key: 'iterations', label: 'Benchmark iterations', type: 'number', min: 1, max: 100000, step: 1, def: 100, rebuild: 'none' },
     { key: 'benchFlush', label: 'Force rasterise/layout flush', type: 'bool', def: false, rebuild: 'none',
       hint: 'Adds a synchronous read-back after each render so deferred work is included.' },
